@@ -1,5 +1,6 @@
 using Api.Extensoes;
 using Application;
+using Application.Middlewares;
 using Infrastructure;
 using Infrastructure.Persistencia.DataContext;
 using Microsoft.EntityFrameworkCore;
@@ -23,11 +24,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.ConfigurarIdentity();
 
+builder.Services.ConfigurarJwt(builder.Configuration);
+
 builder.Services.
-    ConfigurarApplication()
+    ConfigurarApplication(builder.Configuration)
     .ConfigurarInfrastrutura();
 
 var app = builder.Build();
+
+app.UseMiddleware<TratamentoErrosMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -37,6 +42,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
