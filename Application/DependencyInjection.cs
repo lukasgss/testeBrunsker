@@ -1,4 +1,4 @@
-using Application.Common.Interfaces.Authentication;
+using Application.Common.Interfaces.Autenticacao;
 using Application.Common.Interfaces.Autorizacao;
 using Application.Common.Interfaces.Entidades.Imoveis;
 using Application.Common.Interfaces.Entidades.Usuarios;

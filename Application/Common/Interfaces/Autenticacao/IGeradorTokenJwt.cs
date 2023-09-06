@@ -1,6 +1,6 @@
-namespace Application.Common.Interfaces.Authentication;
+namespace Application.Common.Interfaces.Autenticacao;
 
 public interface IGeradorTokenJwt
 {
-    string GerarToken(int idUsuario, string fullName);
+    string GerarToken(int idUsuario, string nomeCompleto);
 }

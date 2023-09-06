@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Application.Common.Interfaces.Authentication;
+using Application.Common.Interfaces.Autenticacao;
 using Application.Common.Interfaces.Providers;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -20,7 +20,7 @@ public class GeradorTokenJwt : IGeradorTokenJwt
         _jwtConfig = opcoesJwt.Value;
     }
 
-    public string GerarToken(int idUsuario, string fullName)
+    public string GerarToken(int idUsuario, string nomeCompleto)
     {
         SigningCredentials signingCredentials = new(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtConfig.SecretKey)),
@@ -30,7 +30,7 @@ public class GeradorTokenJwt : IGeradorTokenJwt
         {
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(JwtRegisteredClaimNames.Sub, idUsuario.ToString()),
-            new Claim(JwtRegisteredClaimNames.Name, fullName)
+            new Claim(JwtRegisteredClaimNames.Name, nomeCompleto)
         };
 
         JwtSecurityToken jwtSecurityToken = new(

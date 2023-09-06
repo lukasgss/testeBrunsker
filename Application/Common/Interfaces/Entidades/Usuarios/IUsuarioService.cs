@@ -5,6 +5,6 @@ namespace Application.Common.Interfaces.Entidades.Usuarios;
 public interface IUsuarioService
 {
     Task<RespostaDadosUsuario> ObterUsuarioPorId(int idUsuario);
-    Task<RespostaUsuario> RegisterAsync(CriarUsuarioRequest criarUsuarioRequest);
+    Task<RespostaUsuario> RegistrarAsync(CriarUsuarioRequest criarUsuarioRequest);
     Task<RespostaUsuario> LoginAsync(LoginRequest loginRequest);
 }

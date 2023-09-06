@@ -1,6 +1,6 @@
 using Application.Common.Exceptions;
 using Application.Common.Extensions.Mapeamento;
-using Application.Common.Interfaces.Authentication;
+using Application.Common.Interfaces.Autenticacao;
 using Application.Common.Interfaces.Entidades.Usuarios;
 using Application.Common.Interfaces.Entidades.Usuarios.DTOs;
 using Domain.Entidades;
@@ -30,7 +30,7 @@ public class UsuarioService : IUsuarioService
         return usuario.ToRespostaDadosUsuario();
     }
 
-    public async Task<RespostaUsuario> RegisterAsync(CriarUsuarioRequest criarUsuarioRequest)
+    public async Task<RespostaUsuario> RegistrarAsync(CriarUsuarioRequest criarUsuarioRequest)
     {
         Usuario usuarioParaCriar = new()
         {
@@ -47,10 +47,11 @@ public class UsuarioService : IUsuarioService
             throw new ConflictException("Usuário com o e-mail especificado já existe.");
         }
 
-        SignInResult resultadoCadastro =
-            await _usuarioRepository.CheckCredentials(usuarioParaCriar, criarUsuarioRequest.Senha);
+        IdentityResult resultadoCadastro =
+            await _usuarioRepository.RegistrarAsync(usuarioParaCriar, criarUsuarioRequest.Senha);
 
-        IdentityResult resultadoLockout = await _usuarioRepository.SetLockoutEnabledAsync(usuarioParaCriar, false);
+        IdentityResult resultadoLockout =
+            await _usuarioRepository.SetLockoutEnabledAsync(usuarioParaCriar, habilitado: false);
 
         if (!resultadoCadastro.Succeeded || !resultadoLockout.Succeeded)
         {

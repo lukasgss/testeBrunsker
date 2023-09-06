@@ -36,7 +36,7 @@ public class UsuarioController : ControllerBase
             return BadRequest(erros);
         }
 
-        RespostaUsuario usuarioCriado = await _usuarioService.RegisterAsync(criarUsuarioRequest);
+        RespostaUsuario usuarioCriado = await _usuarioService.RegistrarAsync(criarUsuarioRequest);
 
         return new CreatedAtRouteResult(nameof(ObterUsuarioPorId), new { id = usuarioCriado.Id }, usuarioCriado);
     }
