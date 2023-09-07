@@ -21,6 +21,7 @@ public class LocacaoServiceTests
     private readonly ILocacaoService _sut;
 
     private readonly Locacao _locacao = GeradorLocacao.GerarLocacao();
+    private readonly Locacao _locacaoJaAssinada = GeradorLocacao.GerarLocacaoJaAssinada();
     private readonly CriarLocacaoRequest _criarLocacaoRequest = GeradorLocacao.GerarCriarLocacaoRequest();
     private readonly EditarLocacaoRequest _editarLocacaoRequest = GeradorLocacao.GerarEditarLocacaoRequest();
     private readonly RespostaLocacao _respostaLocacaoEsperada = GeradorLocacao.GerarRespostaLocacao();
@@ -61,6 +62,19 @@ public class LocacaoServiceTests
         RespostaLocacao respostaLocacao = await _sut.ObterPorIdAsync(_locacao.Id);
 
         Assert.Equivalent(_respostaLocacaoEsperada, respostaLocacao);
+    }
+
+    [Fact]
+    public async Task Cadastrar_Locacao_Sendo_Locatario_E_Locador_Retorna_BadRequestException()
+    {
+        CriarLocacaoRequest locacaoRequestSendoLocatarioELocador = new() { IdLocatario = _usuario.Id };
+
+        async Task Result() =>
+            await _sut.CadastrarAsync(locacaoRequestSendoLocatarioELocador, _usuario.Id);
+
+        var excecao = await Assert.ThrowsAsync<BadRequestException>(Result);
+        Assert.Equal("Não é possível ser locatário e locador da locação, insira outro usuário como locatário.",
+            excecao.Message);
     }
 
     [Fact]
@@ -113,13 +127,12 @@ public class LocacaoServiceTests
     }
 
     [Fact]
-    public async Task Cadastrar_Imovel_Retorna_Imovel_Cadastrado()
+    public async Task Cadastrar_Locacao_Retorna_Locacao_Cadastrada()
     {
         _imovelRepositoryMock.ObterPorIdAsync(Constants.DadosImovel.Id).Returns(_imovel);
         _locacaoRepositoryMock.ObterPorIdDoImovelAsync(_imovel.Id).ReturnsNull();
         _usuarioRepositoryMock.ObterPorIdAsync(_criarLocacaoRequest.IdLocatario).Returns(_locatario);
         _usuarioRepositoryMock.ObterPorIdAsync(Constants.DadosLocacao.LocadorId).Returns(_usuario);
-        _dateTimeProviderMock.UtcNow().Returns(Constants.DadosLocacao.DataFechamento);
 
         RespostaLocacao respostaLocacao =
             await _sut.CadastrarAsync(_criarLocacaoRequest, Constants.DadosLocacao.LocadorId);
@@ -137,6 +150,20 @@ public class LocacaoServiceTests
 
         var excecao = await Assert.ThrowsAsync<BadRequestException>(Result);
         Assert.Equal("Id da rota não coincide com o id especificado.", excecao.Message);
+    }
+
+    [Fact]
+    public async Task Editar_Locacao_Sendo_Locatario_E_Locador_Retorna_BadRequestException()
+    {
+        EditarLocacaoRequest locacaoRequestSendoLocatarioELocador = new() { IdLocatario = _usuario.Id };
+
+        async Task Result() =>
+            await _sut.EditarAsync(locacaoRequestSendoLocatarioELocador, _usuario.Id,
+                locacaoRequestSendoLocatarioELocador.Id);
+
+        var excecao = await Assert.ThrowsAsync<BadRequestException>(Result);
+        Assert.Equal("Não é possível ser locatário e locador da locação, insira outro usuário como locatário.",
+            excecao.Message);
     }
 
     [Fact]
@@ -167,7 +194,7 @@ public class LocacaoServiceTests
     {
         _locacaoRepositoryMock.ObterPorIdAsync(_locacao.Id).Returns(_locacao);
         _imovelRepositoryMock.ObterPorIdAsync(_imovel.Id).Returns(_imovel);
-        _locacaoRepositoryMock.ObterPorIdDoImovelAsync(_editarLocacaoRequest.IdImovel).Returns(_locacao);
+        _locacaoRepositoryMock.ObterPorIdDoImovelAsync(_editarLocacaoRequest.IdImovel).Returns(new Locacao());
 
         async Task Result() => await _sut.EditarAsync(_editarLocacaoRequest, _usuario.Id, _editarLocacaoRequest.Id);
 
@@ -239,5 +266,63 @@ public class LocacaoServiceTests
 
         var excecao = await Assert.ThrowsAsync<UnauthorizedException>(Result);
         Assert.Equal("Não é possível excluir locações de imóveis que não é dono.", excecao.Message);
+    }
+
+    [Fact]
+    public async Task Assinar_Locacao_Inexistente_Retorna_NotFoundException()
+    {
+        _locacaoRepositoryMock.ObterPorIdAsync(_locacao.Id).ReturnsNull();
+
+        async Task Result() => await _sut.AssinarAsync(_locacao.Id, _usuario.Id);
+
+        var excecao = await Assert.ThrowsAsync<NotFoundException>(Result);
+        Assert.Equal("Locação com o id especificado não existe.", excecao.Message);
+    }
+
+    [Fact]
+    public async Task Assinar_Locacao_Sendo_Locador_Ja_Tendo_Assinado_Retorna_BadRequestException()
+    {
+        _locacaoRepositoryMock.ObterPorIdAsync(_locacao.Id).Returns(_locacaoJaAssinada);
+
+        async Task Result() => await _sut.AssinarAsync(_locacaoJaAssinada.Id, _locacaoJaAssinada.Locador.Id);
+
+        var excecao = await Assert.ThrowsAsync<BadRequestException>(Result);
+        Assert.Equal("Locação já foi assinada por você, não é possível assiná-la novamente.", excecao.Message);
+    }
+
+    [Fact]
+    public async Task Assinar_Locacao_Sendo_Locatario_Ja_Tendo_Assinado_Retorna_BadRequestException()
+    {
+        _locacaoRepositoryMock.ObterPorIdAsync(_locacao.Id).Returns(_locacaoJaAssinada);
+
+        async Task Result() => await _sut.AssinarAsync(_locacaoJaAssinada.Id, _locacaoJaAssinada.Locatario.Id);
+
+        var excecao = await Assert.ThrowsAsync<BadRequestException>(Result);
+        Assert.Equal("Locação já foi assinada por você, não é possível assiná-la novamente.", excecao.Message);
+    }
+
+    [Fact]
+    public async Task Assinar_Locacao_Em_Que_Nao_E_Locador_Ou_Locatario_Retorna_UnauthorizedException()
+    {
+        _locacaoRepositoryMock.ObterPorIdAsync(_locacao.Id).Returns(_locacao);
+        const int idUsuarioNaoLocatarioOuLocador = 99;
+
+        async Task Result() => await _sut.AssinarAsync(_locacaoJaAssinada.Id, idUsuarioNaoLocatarioOuLocador);
+
+        var excecao = await Assert.ThrowsAsync<UnauthorizedException>(Result);
+        Assert.Equal("Não é possível assinar locações em que não é locador ou locatário.", excecao.Message);
+    }
+
+    [Fact]
+    public async Task Assinar_Locacao_Retorna_Locacao_Assinada()
+    {
+        Locacao locacaoJaAssinadaPeloLocador = GeradorLocacao.GerarLocacaoJaAssinadaPeloLocador();
+        _locacaoRepositoryMock.ObterPorIdAsync(_locacao.Id).Returns(locacaoJaAssinadaPeloLocador);
+        _dateTimeProviderMock.UtcNow().Returns(Constants.DadosLocacao.DataFechamentoLocacaoAssinada);
+        RespostaLocacao respostaLocacaoEsperada = GeradorLocacao.GerarRespostaLocacaoAssinada();
+
+        RespostaLocacao respostaLocacao = await _sut.AssinarAsync(_locacao.Id, _locatario.Id);
+
+        Assert.Equivalent(respostaLocacaoEsperada, respostaLocacao);
     }
 }

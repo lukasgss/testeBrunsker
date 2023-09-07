@@ -50,6 +50,16 @@ public class LocacaoController : ControllerBase
     }
 
     [Authorize]
+    [HttpPost("assinar/{idLocacao:int}")]
+    public async Task<ActionResult<RespostaLocacao>> Assinar(int idLocacao)
+    {
+        int idUsuario = _usuarioAuthService.ObterIdPorTokenJwt(User);
+
+        RespostaLocacao locacaoAssinada = await _locacaoService.AssinarAsync(idLocacao, idUsuario);
+        return Ok(locacaoAssinada);
+    }
+
+    [Authorize]
     [HttpPut("{idLocacao:int}")]
     public async Task<ActionResult<RespostaLocacao>> Editar(EditarLocacaoRequest editarLocacaoRequest, int idLocacao)
     {

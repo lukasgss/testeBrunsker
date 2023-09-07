@@ -25,8 +25,7 @@ public class Locacao
     [Required] 
     public bool LocatarioAssinou { get; set; } = false;
     
-    [Required]
-    public DateTime DataFechamento { get; set; }
+    public DateTime? DataFechamento { get; set; }
     
     [Required]
     public DateOnly DataVencimento { get; set; }

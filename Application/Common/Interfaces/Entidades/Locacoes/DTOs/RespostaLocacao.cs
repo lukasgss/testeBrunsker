@@ -11,7 +11,7 @@ public class RespostaLocacao
     public RespostaDadosUsuario Locatario { get; set; } = null!;
     public bool LocadorAssinou { get; set; }
     public bool LocatarioAssinou { get; set; }
-    public DateTime DataFechamento { get; set; }
+    public DateTime? DataFechamento { get; set; }
     public DateOnly DataVencimento { get; set; }
     public decimal ValorMensal { get; set; }
 }

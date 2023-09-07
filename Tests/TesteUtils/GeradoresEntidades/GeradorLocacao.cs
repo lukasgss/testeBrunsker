@@ -26,6 +26,44 @@ public static class GeradorLocacao
         };
     }
 
+    public static Locacao GerarLocacaoJaAssinada()
+    {
+        return new Locacao()
+        {
+            Id = Constants.DadosLocacao.Id,
+            Imovel = Constants.DadosLocacao.Imovel,
+            ImovelId = Constants.DadosLocacao.ImovelId,
+            Locador = Constants.DadosLocacao.Locador,
+            LocadorId = Constants.DadosLocacao.LocadorId,
+            Locatario = Constants.DadosLocacao.Locatario,
+            LocatarioId = Constants.DadosLocacao.LocatarioId,
+            LocadorAssinou = true,
+            LocatarioAssinou = true,
+            DataFechamento = Constants.DadosLocacao.DataFechamentoLocacaoAssinada,
+            DataVencimento = Constants.DadosLocacao.DataVencimento,
+            ValorMensal = Constants.DadosLocacao.ValorMensal
+        };
+    }
+
+    public static Locacao GerarLocacaoJaAssinadaPeloLocador()
+    {
+        return new Locacao()
+        {
+            Id = Constants.DadosLocacao.Id,
+            Imovel = Constants.DadosLocacao.Imovel,
+            ImovelId = Constants.DadosLocacao.ImovelId,
+            Locador = Constants.DadosLocacao.Locador,
+            LocadorId = Constants.DadosLocacao.LocadorId,
+            Locatario = Constants.DadosLocacao.Locatario,
+            LocatarioId = Constants.DadosLocacao.LocatarioId,
+            LocadorAssinou = true,
+            LocatarioAssinou = false,
+            DataFechamento = Constants.DadosLocacao.DataFechamento,
+            DataVencimento = Constants.DadosLocacao.DataVencimento,
+            ValorMensal = Constants.DadosLocacao.ValorMensal
+        };
+    }
+
     public static CriarLocacaoRequest GerarCriarLocacaoRequest()
     {
         return new CriarLocacaoRequest()
@@ -60,6 +98,22 @@ public static class GeradorLocacao
             LocadorAssinou = Constants.DadosLocacao.LocadorAssinou,
             LocatarioAssinou = Constants.DadosLocacao.LocatarioAssinou,
             DataFechamento = Constants.DadosLocacao.DataFechamento,
+            DataVencimento = Constants.DadosLocacao.DataVencimento,
+            ValorMensal = Constants.DadosLocacao.ValorMensal
+        };
+    }
+
+    public static RespostaLocacao GerarRespostaLocacaoAssinada()
+    {
+        return new RespostaLocacao()
+        {
+            Id = Constants.DadosLocacao.Id,
+            Imovel = Constants.DadosLocacao.Imovel.ToRespostaImovel(),
+            Locador = Constants.DadosLocacao.Locador.ToRespostaDadosUsuario(),
+            Locatario = Constants.DadosLocacao.Locatario.ToRespostaDadosUsuario(),
+            LocadorAssinou = true,
+            LocatarioAssinou = true,
+            DataFechamento = Constants.DadosLocacao.DataFechamentoLocacaoAssinada,
             DataVencimento = Constants.DadosLocacao.DataVencimento,
             ValorMensal = Constants.DadosLocacao.ValorMensal
         };

@@ -8,4 +8,5 @@ public interface ILocacaoService
     Task<RespostaLocacao> CadastrarAsync(CriarLocacaoRequest criarLocacaoRequest, int idLocador);
     Task<RespostaLocacao> EditarAsync(EditarLocacaoRequest editarLocacaoRequest, int idLocador, int idRota);
     Task DeletarAsync(int idLocacao, int idUsuario);
+    Task<RespostaLocacao> AssinarAsync(int idLocacao, int idUsuario);
 }
