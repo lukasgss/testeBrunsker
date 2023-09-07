@@ -56,6 +56,9 @@ public class ImovelService : IImovelService
             {
                 Cep = cepFormatado,
                 Endereco = dadosCep.Logradouro!,
+                Cidade = dadosCep.Localidade!,
+                Estado = dadosCep.Uf!,
+                Bairro = dadosCep.Bairro!,
                 Numero = criarImovelRequest.Numero,
                 Complemento = criarImovelRequest.Complemento,
                 Dono = usuarioDono!,
@@ -111,6 +114,9 @@ public class ImovelService : IImovelService
 
             imovelDb.Cep = cepFormatado;
             imovelDb.Endereco = dadosCep.Logradouro!;
+            imovelDb.Cidade = dadosCep.Localidade!;
+            imovelDb.Estado = dadosCep.Uf!;
+            imovelDb.Bairro = dadosCep.Bairro!;
             imovelDb.Numero = editarImovelRequest.Numero;
             imovelDb.Complemento = editarImovelRequest.Complemento;
 

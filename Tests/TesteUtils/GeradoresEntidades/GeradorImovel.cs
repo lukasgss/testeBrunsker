@@ -15,6 +15,9 @@ public static class GeradorImovel
             Id = Constants.DadosImovel.Id,
             Endereco = Constants.DadosImovel.Endereco,
             Cep = Constants.DadosImovel.Cep,
+            Cidade = Constants.DadosImovel.Cidade,
+            Bairro = Constants.DadosImovel.Bairro,
+            Estado = Constants.DadosImovel.Estado,
             Numero = Constants.DadosImovel.Numero,
             Complemento = Constants.DadosImovel.Complemento,
             Dono = Constants.DadosImovel.Dono
@@ -28,6 +31,9 @@ public static class GeradorImovel
             Id = Constants.DadosImovel.Id,
             Endereco = Constants.DadosImovel.Endereco,
             Cep = Constants.DadosImovel.Cep,
+            Cidade = Constants.DadosImovel.Cidade,
+            Bairro = Constants.DadosImovel.Bairro,
+            Estado = Constants.DadosImovel.Estado,
             Numero = numero,
             Complemento = complemento,
             Dono = Constants.DadosImovel.Dono
@@ -70,6 +76,9 @@ public static class GeradorImovel
             Id = Constants.DadosImovel.Id,
             Cep = Constants.DadosImovel.Cep,
             Endereco = Constants.DadosImovel.Endereco,
+            Cidade = Constants.DadosImovel.Cidade,
+            Bairro = Constants.DadosImovel.Bairro,
+            Estado = Constants.DadosImovel.Estado,
             Numero = Constants.DadosImovel.Numero,
             Complemento = Constants.DadosImovel.Complemento,
             Dono = Constants.DadosImovel.Dono.ToRespostaDadosUsuario()
