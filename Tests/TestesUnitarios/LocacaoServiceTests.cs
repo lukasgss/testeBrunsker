@@ -276,12 +276,12 @@ public class LocacaoServiceTests
     public async Task Excluir_Locacao_Em_Que_Nao_E_Dono_Retorna_UnauthorizedException()
     {
         _locacaoRepositoryMock.ObterPorIdAsync(_locacao.Id).Returns(_locacao);
-        const int idUsuarioQueNaoEDono = 99;
+        const int idUsuarioQueNaoELocador = 99;
 
-        async Task Result() => await _sut.DeletarAsync(_locacao.Id, idUsuarioQueNaoEDono);
+        async Task Result() => await _sut.DeletarAsync(_locacao.Id, idUsuarioQueNaoELocador);
 
         var excecao = await Assert.ThrowsAsync<UnauthorizedException>(Result);
-        Assert.Equal("Não é possível excluir locações de imóveis que não é dono.", excecao.Message);
+        Assert.Equal("Não é possível excluir locações em que não é o locador.", excecao.Message);
     }
 
     [Fact]

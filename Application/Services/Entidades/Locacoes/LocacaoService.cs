@@ -111,9 +111,9 @@ public class LocacaoService : ILocacaoService
     public async Task DeletarAsync(int idLocacao, int idUsuario)
     {
         Locacao locacao = await ValidarEObterLocacaoAsync(idLocacao);
-        if (locacao.Imovel.Dono.Id != idUsuario)
+        if (locacao.Locador.Id != idUsuario)
         {
-            throw new UnauthorizedException("Não é possível excluir locações de imóveis que não é dono.");
+            throw new UnauthorizedException("Não é possível excluir locações em que não é o locador.");
         }
 
         _locacaoRepository.Delete(locacao);
