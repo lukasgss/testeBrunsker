@@ -16,8 +16,8 @@ public static class MapeamentosImovel
             Estado = imovel.Estado,
             Bairro = imovel.Bairro,
             Numero = imovel.Numero,
-            Complemento = imovel.Complemento,
-            Dono = imovel.Dono.ToRespostaDadosUsuario()
+            Complemento = imovel?.Complemento,
+            Dono = imovel!.Dono.ToRespostaDadosUsuario()
         };
     }
 }

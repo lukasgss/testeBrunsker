@@ -77,10 +77,14 @@ public class LocacaoService : ILocacaoService
         {
             throw new BadRequestException("Id da rota não coincide com o id especificado.");
         }
-
+        
         ValidarSeLocadorELocatarioSaoOsMesmos(editarLocacaoRequest.IdLocatario, idLocador);
 
         Locacao locacaoDb = await ValidarEObterLocacaoAsync(editarLocacaoRequest.Id);
+        if (locacaoDb.Locador.Id != idLocador)
+        {
+            throw new UnauthorizedException("Não é possível editar locações em que não é o locador.");
+        }
         Imovel imovel = await ValidarEObterImovelAsync(editarLocacaoRequest.IdImovel);
 
         await ValidarSeImovelJaPossuiLocacaoParaEdicaoAsync(editarLocacaoRequest.IdImovel, editarLocacaoRequest.Id);
@@ -92,9 +96,12 @@ public class LocacaoService : ILocacaoService
         locacaoDb.Locatario = locatario;
         locacaoDb.DataVencimento = editarLocacaoRequest.DataVencimento;
         locacaoDb.ValorMensal = editarLocacaoRequest.ValorMensal;
-        // Quando o locatário alterar dados da locação, é necessário que ambos assinem novamente
+        // Quando o locatário alterar dados da locação, é necessário que ambos assinem novamente.
+        // Data de fechamento é setada como nulo, indicando como se não houvesse sido assinado
+        // por ambas as partes ainda
         locacaoDb.LocadorAssinou = false;
         locacaoDb.LocatarioAssinou = false;
+        locacaoDb.DataFechamento = null;
 
         await _locacaoRepository.CommitAsync();
 

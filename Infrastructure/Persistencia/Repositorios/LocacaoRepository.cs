@@ -18,6 +18,7 @@ public class LocacaoRepository : GenericRepository<Locacao>, ILocacaoRepository
     {
         return await _dbContext.Locacoes
             .Include(locacao => locacao.Imovel)
+                .ThenInclude(imovel => imovel.Dono)
             .Include(locacao => locacao.Locador)
             .Include(locacao => locacao.Locatario)
             .SingleOrDefaultAsync(locacao => locacao.Id == idLocacao);
@@ -27,6 +28,7 @@ public class LocacaoRepository : GenericRepository<Locacao>, ILocacaoRepository
     {
         return await _dbContext.Locacoes
             .Include(locacao => locacao.Imovel)
+                .ThenInclude(imovel => imovel.Dono)
             .Include(locacao => locacao.Locador)
             .Include(locacao => locacao.Locatario)
             .SingleOrDefaultAsync(locacao => locacao.Imovel.Id == idImovel);

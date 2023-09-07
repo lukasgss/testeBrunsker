@@ -203,12 +203,28 @@ public class LocacaoServiceTests
     }
 
     [Fact]
-    public async Task Editar_Locacao_Em_Que_Nao_E_Dono_Retorna_UnauthorizedException()
+    public async Task Editar_Locacao_Em_Que_Nao_E_Locador_Retorna_UnauthorizedException()
     {
         _locacaoRepositoryMock.ObterPorIdAsync(_locacao.Id).Returns(_locacao);
         _imovelRepositoryMock.ObterPorIdAsync(_imovel.Id).Returns(_imovel);
         _locacaoRepositoryMock.ObterPorIdDoImovelAsync(_editarLocacaoRequest.IdImovel).ReturnsNull();
+        const int idUsuarioQueNaoELocador = 99;
+
+        async Task Result() =>
+            await _sut.EditarAsync(_editarLocacaoRequest, idUsuarioQueNaoELocador, _editarLocacaoRequest.Id);
+
+        var excecao = await Assert.ThrowsAsync<UnauthorizedException>(Result);
+        Assert.Equal("Não é possível editar locações em que não é o locador.", excecao.Message);
+    }
+
+    [Fact]
+    public async Task Editar_Locacao_Em_Que_Nao_E_Dono_Retorna_UnauthorizedException()
+    {
         const int idUsuarioQueNaoEDono = 99;
+        Locacao locacao = new() { Locador = new() { Id = idUsuarioQueNaoEDono } };
+        _locacaoRepositoryMock.ObterPorIdAsync(_locacao.Id).Returns(locacao);
+        _imovelRepositoryMock.ObterPorIdAsync(_imovel.Id).Returns(_imovel);
+        _locacaoRepositoryMock.ObterPorIdDoImovelAsync(_editarLocacaoRequest.IdImovel).ReturnsNull();
 
         async Task Result() =>
             await _sut.EditarAsync(_editarLocacaoRequest, idUsuarioQueNaoEDono, _editarLocacaoRequest.Id);
