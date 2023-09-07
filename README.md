@@ -31,6 +31,10 @@ Essa camada é responsável por expor as funcionalidades da aplicação para os 
 # Testes unitários
 
 Os testes unitários foram feitos utilizando XUnit e NSubstitute para o mock de dependências. Foram utilizadas classes geradoras de dados, como por exemplo a classe GeradorImovel e classes de constantes para cada entidade, mantendo os valores padronizados.
+Para rodar os testes, basta entrar na pasta de Tests e executar:
+```bash
+dotnet test
+```
 
 #  Rodar o projeto
 
