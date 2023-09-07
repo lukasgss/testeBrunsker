@@ -29,8 +29,8 @@ public class Locacao
     public DateTime DataFechamento { get; set; }
     
     [Required]
-    public DateTime DataVencimento { get; set; }
+    public DateOnly DataVencimento { get; set; }
     
     [Required, Column(TypeName = "decimal(12, 2)")]
-    public decimal Valor { get; set; }
+    public decimal ValorMensal { get; set; }
 }

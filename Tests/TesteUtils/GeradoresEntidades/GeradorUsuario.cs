@@ -19,6 +19,19 @@ public static class GeradorUsuario
         };
     }
 
+    public static Usuario GerarUsuarioComId(int id)
+    {
+        return new Usuario()
+        {
+            Id = id,
+            NomeCompleto = Constants.DadosUsuario.NomeCompleto,
+            Email = Constants.DadosUsuario.Email,
+            PhoneNumber = Constants.DadosUsuario.Telefone,
+            UserName = Constants.DadosUsuario.UserName,
+            EmailConfirmed = Constants.DadosUsuario.EmailConfirmed,
+        };
+    }
+
     public static RespostaDadosUsuario GerarRespostaDadosUsuario()
     {
         return new RespostaDadosUsuario()

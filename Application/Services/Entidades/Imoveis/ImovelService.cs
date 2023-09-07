@@ -27,7 +27,7 @@ public class ImovelService : IImovelService
 
     public async Task<RespostaImovel> ObterPorIdAsync(int imovelId)
     {
-        Imovel? imovel = await _imovelRepository.ObterPorId(imovelId);
+        Imovel? imovel = await _imovelRepository.ObterPorIdAsync(imovelId);
         if (imovel is null)
         {
             throw new NotFoundException("Imóvel com o id especificado não existe.");
@@ -86,7 +86,7 @@ public class ImovelService : IImovelService
             throw new BadRequestException("Id da rota não coincide com o id especificado.");
         }
 
-        Imovel? imovelDb = await _imovelRepository.ObterPorId(editarImovelRequest.Id);
+        Imovel? imovelDb = await _imovelRepository.ObterPorIdAsync(editarImovelRequest.Id);
         if (imovelDb is null)
         {
             throw new NotFoundException("Imóvel com o id especificado não foi encontrado.");
@@ -133,7 +133,7 @@ public class ImovelService : IImovelService
 
     public async Task DeletarAsync(int idUsuario, int idImovel)
     {
-        Imovel? imovelDb = await _imovelRepository.ObterPorId(idImovel);
+        Imovel? imovelDb = await _imovelRepository.ObterPorIdAsync(idImovel);
         if (imovelDb is null)
         {
             throw new NotFoundException("Imóvel com o id especificado não existe.");
@@ -152,7 +152,7 @@ public class ImovelService : IImovelService
     {
         List<Imovel> imoveis = await _imovelRepository.ObterPorCep(cepFormatado);
 
-        if (ImovelJaExiste(imoveis, criarImovelRequest.Numero, criarImovelRequest?.Complemento))
+        if (ImovelJaExiste(imoveis, criarImovelRequest.Numero, criarImovelRequest.Complemento))
         {
             throw new ConflictException("Imóvel já foi cadastrado.");
         }
@@ -162,7 +162,7 @@ public class ImovelService : IImovelService
     {
         List<Imovel> imoveis = await _imovelRepository.ObterPorCep(cepFormatado);
 
-        if (ImovelJaExiste(imoveis, editarImovelRequest.Numero, editarImovelRequest?.Complemento))
+        if (ImovelJaExiste(imoveis, editarImovelRequest.Numero, editarImovelRequest.Complemento))
         {
             throw new ConflictException("Imóvel com esses dados já foi cadastrado.");
         }

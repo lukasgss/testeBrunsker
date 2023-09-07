@@ -41,7 +41,7 @@ public class ImovelServiceTests
     [Fact]
     public async Task Obter_Imovel_Nao_Existente_Por_Id_Retorna_NotFoundException()
     {
-        _imovelRepositoryMock.ObterPorId(_imovel.Id).ReturnsNull();
+        _imovelRepositoryMock.ObterPorIdAsync(_imovel.Id).ReturnsNull();
 
         async Task Result() => await _sut.ObterPorIdAsync(_imovel.Id);
 
@@ -52,7 +52,7 @@ public class ImovelServiceTests
     [Fact]
     public async Task Obter_Imovel_Por_Id_Retorna_Imovel()
     {
-        _imovelRepositoryMock.ObterPorId(_imovel.Id).Returns(_imovel);
+        _imovelRepositoryMock.ObterPorIdAsync(_imovel.Id).Returns(_imovel);
 
         RespostaImovel respostaImovel = await _sut.ObterPorIdAsync(_imovel.Id);
 
@@ -135,7 +135,7 @@ public class ImovelServiceTests
     [Fact]
     public async Task Editar_Imovel_Nao_Existente_Retorna_NotFoundException()
     {
-        _imovelRepositoryMock.ObterPorId(_editarImovelRequest.Id).ReturnsNull();
+        _imovelRepositoryMock.ObterPorIdAsync(_editarImovelRequest.Id).ReturnsNull();
 
         async Task Result() => await _sut.EditarAsync(
             _editarImovelRequest,
@@ -150,7 +150,7 @@ public class ImovelServiceTests
     public async Task Editar_Imovel_Sem_Ser_O_Dono_Retorna_UnauthorizedException()
     {
         const int idUsuarioNaoExistente = 999;
-        _imovelRepositoryMock.ObterPorId(_editarImovelRequest.Id).Returns(_imovel);
+        _imovelRepositoryMock.ObterPorIdAsync(_editarImovelRequest.Id).Returns(_imovel);
 
         async Task Result() => await _sut.EditarAsync(
             _editarImovelRequest,
@@ -164,7 +164,7 @@ public class ImovelServiceTests
     [Fact]
     public async Task Editar_Imovel_Para_Imovel_Ja_Existente_Retorna_ConflictException()
     {
-        _imovelRepositoryMock.ObterPorId(_editarImovelRequest.Id).Returns(_imovel);
+        _imovelRepositoryMock.ObterPorIdAsync(_editarImovelRequest.Id).Returns(_imovel);
         _imovelRepositoryMock.ObterPorCep(_editarImovelRequest.Cep).Returns(_listaImoveis);
 
         async Task Result() => await _sut.EditarAsync(
@@ -179,7 +179,7 @@ public class ImovelServiceTests
     [Fact]
     public async Task Editar_Imovel_Com_Cep_Invalido_Retorna_BadRequestException()
     {
-        _imovelRepositoryMock.ObterPorId(_editarImovelRequest.Id).Returns(_imovel);
+        _imovelRepositoryMock.ObterPorIdAsync(_editarImovelRequest.Id).Returns(_imovel);
         List<Imovel> imoveisJaExistentes = new List<Imovel>()
         {
             GeradorImovel.GerarImovelComComplementoENumero(complemento: "222", numero: 70)
@@ -204,7 +204,7 @@ public class ImovelServiceTests
         {
             GeradorImovel.GerarImovelComComplementoENumero(complemento: "222", numero: 70)
         };
-        _imovelRepositoryMock.ObterPorId(_imovel.Id).Returns(_imovel);
+        _imovelRepositoryMock.ObterPorIdAsync(_imovel.Id).Returns(_imovel);
         _imovelRepositoryMock.ObterPorCep(_imovel.Cep).Returns(imoveisJaExistentes);
         _viaCepClientMock.ObterEnderecoPorCep(_editarImovelRequest.Cep).ThrowsAsync<HttpRequestException>();
 
@@ -224,7 +224,7 @@ public class ImovelServiceTests
         {
             GeradorImovel.GerarImovelComComplementoENumero(complemento: "222", numero: 70)
         };
-        _imovelRepositoryMock.ObterPorId(_imovel.Id).Returns(_imovel);
+        _imovelRepositoryMock.ObterPorIdAsync(_imovel.Id).Returns(_imovel);
         _imovelRepositoryMock.ObterPorCep(_imovel.Cep).Returns(imoveisJaExistentes);
         _usuarioRepositoryMock.ObterPorIdAsync(Constants.DadosUsuario.Id).Returns(_usuario);
         _viaCepClientMock.ObterEnderecoPorCep(_respostaViaCep.Cep!).Returns(_respostaViaCep);
@@ -240,7 +240,7 @@ public class ImovelServiceTests
     [Fact]
     public async Task Deletar_Imovel_Nao_Existente_Retorna_NotFoundException()
     {
-        _imovelRepositoryMock.ObterPorId(_imovel.Id).ReturnsNull();
+        _imovelRepositoryMock.ObterPorIdAsync(_imovel.Id).ReturnsNull();
 
         async Task Result() =>
             await _sut.DeletarAsync(idUsuario: Constants.DadosUsuario.Id, idImovel: Constants.DadosImovel.Id);
@@ -252,7 +252,7 @@ public class ImovelServiceTests
     [Fact]
     public async Task Deletar_Imovel_Sem_Ser_O_Dono_Retorna_UnauthorizedException()
     {
-        _imovelRepositoryMock.ObterPorId(_imovel.Id).Returns(_imovel);
+        _imovelRepositoryMock.ObterPorIdAsync(_imovel.Id).Returns(_imovel);
         const int idUsuarioQueNaoEDono = 88;
 
         async Task Result() =>

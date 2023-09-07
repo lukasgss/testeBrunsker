@@ -1,5 +1,6 @@
 using Application.Common.Interfaces.ApisExternas.ViaCep;
 using Application.Common.Interfaces.Entidades.Imoveis;
+using Application.Common.Interfaces.Entidades.Locacoes;
 using Application.Common.Interfaces.Entidades.Usuarios;
 using Infrastructure.ApisExternas;
 using Infrastructure.Persistencia.DataContext;
@@ -18,12 +19,13 @@ public static class DependencyInjection
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         services.AddScoped<IImovelRepository, ImovelRepository>();
         services.AddScoped<IViaCepClient, ViaCepClient>();
+        services.AddScoped<ILocacaoRepository, LocacaoRepository>();
 
         services.AddDbContext<AppDbContext>(options =>
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             options.UseMySql(
-                configuration.GetConnectionString("DefaultConnection"),
+                configuration.GetConnectionString("DefaultConnection")!,
                 ServerVersion.AutoDetect(connectionString));
         });
 

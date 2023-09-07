@@ -14,7 +14,7 @@ public class ImovelRepository : GenericRepository<Imovel>, IImovelRepository
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     }
 
-    public async Task<Imovel?> ObterPorId(int idImovel)
+    public async Task<Imovel?> ObterPorIdAsync(int idImovel)
     {
         return await _dbContext.Imoveis
             .Include(imovel => imovel.Dono)
