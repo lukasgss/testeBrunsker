@@ -17,6 +17,7 @@ public class ImovelRepository : GenericRepository<Imovel>, IImovelRepository
     public async Task<Imovel?> ObterPorId(int idImovel)
     {
         return await _dbContext.Imoveis
+            .Include(imovel => imovel.Dono)
             .SingleOrDefaultAsync(imovel => imovel.Id == idImovel);
     }
 

@@ -38,4 +38,23 @@ public class ImovelController : ControllerBase
             new { imovelId = imovelCadastrado.Id },
             imovelCadastrado);
     }
+
+    [Authorize]
+    [HttpPut("{imovelId:int}")]
+    public async Task<ActionResult<RespostaImovel>> Editar(EditarImovelRequest editarImovelRequest, int imovelId)
+    {
+        int idUsuario = _usuarioAuthService.ObterIdPorTokenJwt(User);
+
+        return await _imovelService.EditarAsync(editarImovelRequest, idUsuario, idRota: imovelId);
+    }
+
+    [Authorize]
+    [HttpDelete("{imovelId:int}")]
+    public async Task<ActionResult> Excluir(int imovelId)
+    {
+        int idUsuario = _usuarioAuthService.ObterIdPorTokenJwt(User);
+
+        await _imovelService.DeletarAsync(idUsuario, imovelId);
+        return Ok();
+    }
 }
